@@ -1,0 +1,70 @@
+<h1 style="text-align: center; margin-bottom: 40px;">Our Products</h1>
+
+<!-- Filter Buttons -->
+<div style="display: flex; justify-content: center; gap: 15px; margin-bottom: 20px; flex-wrap: wrap;">
+  <%= link_to "All Products", products_path(filter: nil), 
+      style: "padding: 10px 20px; background: #{params[:filter].nil? ? '#2c3e50' : '#95a5a6'}; color: white; text-decoration: none; border-radius: 5px;" %>
+  
+  <%= link_to "🆕 New Products", products_path(filter: 'new'), 
+      style: "padding: 10px 20px; background: #{params[:filter] == 'new' ? '#27ae60' : '#95a5a6'}; color: white; text-decoration: none; border-radius: 5px;" %>
+  
+  <%= link_to "🔄 Recently Updated", products_path(filter: 'recently_updated'), 
+      style: "padding: 10px 20px; background: #{params[:filter] == 'recently_updated' ? '#3498db' : '#95a5a6'}; color: white; text-decoration: none; border-radius: 5px;" %>
+  
+  <%= link_to "🏷️ On Sale", products_path(filter: 'on_sale'), 
+      style: "padding: 10px 20px; background: #{params[:filter] == 'on_sale' ? '#e67e22' : '#95a5a6'}; color: white; text-decoration: none; border-radius: 5px;" %>
+</div>
+
+<!-- Search Form -->
+<div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 30px;">
+  <%= search_form_for @q, url: products_path, method: :get do |f| %>
+    <%= hidden_field_tag :filter, params[:filter] %>
+    <%= hidden_field_tag :page, params[:page] %>
+    <div style="display: flex; gap: 15px; align-items: center; flex-wrap: wrap;">
+      <div style="flex: 2; min-width: 200px;">
+        <%= f.search_field :name_or_description_cont, 
+            placeholder: "Search by product name or description...", 
+            value: params[:q]&.dig(:name_or_description_cont),
+            style: "width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;" %>
+      </div>
+      <div style="flex: 1; min-width: 150px;">
+        <%= f.select :category_id_eq, 
+            options_from_collection_for_select(Category.all, :id, :name, params[:q]&.dig(:category_id_eq)), 
+            { include_blank: "All Categories" }, 
+            style: "width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;" %>
+      </div>
+      <div>
+        <%= f.submit "Search", style: "background: #3498db; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;" %>
+        <%= link_to "Clear", products_path(filter: params[:filter]), style: "margin-left: 10px; padding: 10px 20px; background: #95a5a6; color: white; text-decoration: none; border-radius: 5px;" %>
+      </div>
+    </div>
+  <% end %>
+</div>
+
+<!-- Products Grid -->
+<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 30px; padding: 20px;">
+  <% if @products.any? %>
+    <% @products.each do |product| %>
+      <div style="border: 1px solid #e0e0e0; border-radius: 8px; padding: 20px; background: white;">
+        <h3><%= link_to product.name, product_path(product), style: "text-decoration: none; color: #2c3e50;" %></h3>
+        <p><%= truncate(product.description, length: 100) %></p>
+        <p style="font-size: 24px; color: #27ae60; font-weight: bold;">$<%= product.price %></p>
+        <p><%= pluralize(product.stock_quantity, 'unit') %> available</p>
+        
+        <% if product.stock_quantity > 0 %>
+          <%= link_to "Add to Cart", test_add_to_cart_path(product.id), 
+              style: "display: inline-block; background-color: #3498db; color: white; padding: 8px 15px; text-decoration: none; border-radius: 5px;" %>
+        <% else %>
+          <button disabled style="background: #95a5a6; color: white; padding: 8px 15px; border: none; border-radius: 5px;">Out of Stock</button>
+        <% end %>
+      </div>
+    <% end %>
+  <% else %>
+    <p style="text-align: center; grid-column: 1/-1; color: #666;">No products found.</p>
+  <% end %>
+</div>
+
+<!-- Pagination -->
+<div style="text-align: center; margin-top: 30px;">
+  <%= paginate @products %>
+</div>

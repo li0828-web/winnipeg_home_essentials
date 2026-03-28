@@ -1,0 +1,107 @@
+<h1>Checkout</h1>
+
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
+  <!-- Order Summary -->
+  <div style="background: white; border-radius: 8px; padding: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+    <h2>Order Summary</h2>
+    <table style="width: 100%; border-collapse: collapse;">
+      <thead>
+        <tr style="border-bottom: 2px solid #dee2e6;">
+          <th style="padding: 10px; text-align: left;">Product</th>
+          <th style="padding: 10px; text-align: center;">Qty</th>
+          <th style="padding: 10px; text-align: right;">Total</th>
+         </tr>
+      </thead>
+      <tbody>
+        <% @cart_items.each do |item| %>
+          <tr style="border-bottom: 1px solid #dee2e6;">
+            <td style="padding: 10px;"><%= item[:product].name %></td>
+            <td style="padding: 10px; text-align: center;"><%= item[:quantity] %></td>
+            <td style="padding: 10px; text-align: right;">$<%= item[:item_total] %></td>
+          </tr>
+        <% end %>
+      </tbody>
+      <tfoot>
+        <tr style="border-top: 2px solid #dee2e6;">
+          <td colspan="2" style="padding: 10px; text-align: right;"><strong>Subtotal:</strong></td>
+          <td style="padding: 10px; text-align: right;"><strong>$<%= @subtotal %></strong></td>
+        </tr>
+        <tr>
+          <td colspan="2" style="padding: 10px; text-align: right;">Tax:</td>
+          <td style="padding: 10px; text-align: right;">$<%= @tax %></td>
+        </tr>
+        <tr style="background: #f8f9fa;">
+          <td colspan="2" style="padding: 10px; text-align: right; font-size: 18px;"><strong>Total:</strong></td>
+          <td style="padding: 10px; text-align: right; font-size: 24px; color: #27ae60; font-weight: bold;">
+            $<%= @total %>
+          </td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+  
+  <!-- Shipping & Payment -->
+  <div style="background: white; border-radius: 8px; padding: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+    <h2>Shipping Information</h2>
+    
+    <%= form_tag checkout_path, method: :post, id: "checkout_form" do %>
+      <% if current_user.has_address? %>
+        <div style="background: #d4edda; padding: 10px; border-radius: 5px; margin-bottom: 15px;">
+          <p style="margin: 0;">Using saved address:</p>
+          <p style="margin: 5px 0;"><strong><%= current_user.address %></strong></p>
+          <p style="margin: 0;"><%= current_user.city %>, <%= current_user.province&.name %> <%= current_user.postal_code %></p>
+        </div>
+        <label style="display: flex; align-items: center; margin-bottom: 15px;">
+          <input type="checkbox" id="use_saved_address" name="use_saved_address" value="1" checked> Use this address
+        </label>
+      <% end %>
+      
+      <div id="address_form" style="<%= 'display: none;' if current_user.has_address? %>">
+        <div style="margin-bottom: 15px;">
+          <label>Address:</label>
+          <%= text_field_tag :address, nil, placeholder: "Street address", style: "width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 5px;" %>
+        </div>
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+          <div>
+            <label>City:</label>
+            <%= text_field_tag :city, nil, placeholder: "City", style: "width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 5px;" %>
+          </div>
+          <div>
+            <label>Postal Code:</label>
+            <%= text_field_tag :postal_code, nil, placeholder: "Postal Code", style: "width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 5px;" %>
+          </div>
+        </div>
+      </div>
+      
+      <div style="margin-bottom: 20px;">
+        <label>Province:</label>
+        <%= select_tag :province_id, 
+            options_from_collection_for_select(@provinces, :id, :name, @selected_province&.id),
+            style: "width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 5px;" %>
+      </div>
+      
+      <div style="margin-top: 20px;">
+        <button type="submit" style="width: 100%; background-color: #27ae60; color: white; border: none; padding: 12px; border-radius: 5px; font-size: 16px; cursor: pointer;">
+          Place Order
+        </button>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<div style="margin-top: 20px; text-align: center;">
+  <%= link_to "← Back to Cart", cart_path %>
+</div>
+
+<script>
+  // Toggle address form when using saved address
+  const useSavedCheckbox = document.getElementById('use_saved_address');
+  const addressForm = document.getElementById('address_form');
+  
+  if (useSavedCheckbox) {
+    useSavedCheckbox.addEventListener('change', function() {
+      addressForm.style.display = this.checked ? 'none' : 'block';
+    });
+  }
+</script>

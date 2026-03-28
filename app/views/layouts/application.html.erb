@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Winnipeg Home Essentials</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <%= csrf_meta_tags %>
+  <%= csp_meta_tag %>
+  <%= javascript_importmap_tags %>
+</head>
+<body>
+  <%= render 'layouts/header' %>
+  
+  <div style="max-width: 1200px; margin: 0 auto; padding: 20px;">
+    <%= render 'layouts/flash' %>
+    <%= yield %>
+  </div>
+</body>
+</html>

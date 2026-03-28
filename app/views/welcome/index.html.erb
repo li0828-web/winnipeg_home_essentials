@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Winnipeg Home Essentials</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 50px auto;
+      padding: 20px;
+      text-align: center;
+    }
+    .container {
+      background-color: #f5f5f5;
+      padding: 40px;
+      border-radius: 10px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    h1 {
+      color: #2c3e50;
+    }
+    .links {
+      margin-top: 30px;
+    }
+    .btn {
+      display: inline-block;
+      margin: 0 10px;
+      padding: 10px 20px;
+      background-color: #3498db;
+      color: white;
+      text-decoration: none;
+      border-radius: 5px;
+    }
+    .btn:hover {
+      background-color: #2980b9;
+    }
+    .user-info {
+      background-color: #d5f4e6;
+      padding: 20px;
+      border-radius: 5px;
+      margin-top: 20px;
+    }
+    .admin-badge {
+      background-color: #27ae60;
+      color: white;
+      padding: 5px 10px;
+      border-radius: 3px;
+      display: inline-block;
+      font-size: 14px;
+    }
+    .logout-btn {
+      background-color: #e74c3c;
+    }
+    .logout-btn:hover {
+      background-color: #c0392b;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🏠 Winnipeg Home Essentials</h1>
+    <p>Your local home essentials store since 2014</p>
+    
+    <% if user_signed_in? %>
+      <div class="user-info">
+        <p>Welcome back, <strong><%= current_user.email %></strong>!</p>
+        <% if current_user.admin? %>
+          <p><span class="admin-badge">✓ Administrator Access</span></p>
+        <% end %>
+        <div class="links">
+          <%= link_to "Logout", destroy_user_session_path, method: :delete, data: { turbo_method: :delete }, class: "btn logout-btn" %>
+        </div>
+      </div>
+    <% else %>
+      <div class="links">
+        <%= link_to "Sign In", new_user_session_path, class: "btn" %>
+        <%= link_to "Create Account", new_user_registration_path, class: "btn" %>
+      </div>
+    <% end %>
+  </div>
+</body>
+</html>

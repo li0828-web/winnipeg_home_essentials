@@ -1,0 +1,64 @@
+<h1>Checkout - Shipping Information</h1>
+
+<div style="background: #f8f9fa; padding: 15px; border-radius: 5px; margin-bottom: 20px;">
+  <h3>Order Summary</h3>
+  <p>Items: <%= @cart_item_count %></p>
+  <p>Subtotal: $<%= number_with_precision(@cart_subtotal, precision: 2) %></p>
+</div>
+
+<%= form_with model: @customer, url: checkout_create_customer_path, local: true do |f| %>
+  <% if @customer.errors.any? %>
+    <div style="color: red; background: #fee; padding: 10px; margin-bottom: 20px; border-radius: 5px;">
+      <h3>Please fix these errors:</h3>
+      <ul>
+        <% @customer.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+  
+  <div style="margin-bottom: 15px;">
+    <%= f.label :first_name, style: "display: inline-block; width: 100px;" %>
+    <%= f.text_field :first_name, required: true, style: "padding: 8px; width: 250px;" %>
+  </div>
+  
+  <div style="margin-bottom: 15px;">
+    <%= f.label :last_name, style: "display: inline-block; width: 100px;" %>
+    <%= f.text_field :last_name, required: true, style: "padding: 8px; width: 250px;" %>
+  </div>
+  
+  <div style="margin-bottom: 15px;">
+    <%= f.label :email, style: "display: inline-block; width: 100px;" %>
+    <%= f.email_field :email, required: true, style: "padding: 8px; width: 250px;" %>
+  </div>
+  
+  <div style="margin-bottom: 15px;">
+    <%= f.label :address, style: "display: inline-block; width: 100px;" %>
+    <%= f.text_field :address, required: true, style: "padding: 8px; width: 250px;" %>
+  </div>
+  
+  <div style="margin-bottom: 15px;">
+    <%= f.label :city, style: "display: inline-block; width: 100px;" %>
+    <%= f.text_field :city, required: true, style: "padding: 8px; width: 250px;" %>
+  </div>
+  
+  <div style="margin-bottom: 15px;">
+    <%= f.label :province, style: "display: inline-block; width: 100px;" %>
+    <%= f.select :province, options_for_select(@provinces), { include_blank: "Select Province" }, required: true, style: "padding: 8px; width: 250px;" %>
+  </div>
+  
+  <div style="margin-bottom: 15px;">
+    <%= f.label :postal_code, style: "display: inline-block; width: 100px;" %>
+    <%= f.text_field :postal_code, placeholder: "A1A 1A1", required: true, style: "padding: 8px; width: 250px;" %>
+  </div>
+  
+  <div style="margin-bottom: 15px;">
+    <%= f.label :phone, style: "display: inline-block; width: 100px;" %>
+    <%= f.telephone_field :phone, style: "padding: 8px; width: 250px;" %>
+  </div>
+  
+  <%= f.submit "Continue to Invoice", style: "background: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;" %>
+<% end %>
+
+<%= link_to "← Back to Cart", cart_path, style: "display: inline-block; margin-top: 20px; color: #6c757d;" %>

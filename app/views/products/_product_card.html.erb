@@ -1,0 +1,14 @@
+<div style="border: 1px solid #e0e0e0; border-radius: 8px; padding: 20px; background: white; margin-bottom: 20px;">
+  <h3><%= link_to product.name, product_path(product), style: "text-decoration: none; color: #2c3e50;" %></h3>
+  <p><%= truncate(product.description, length: 100) %></p>
+  <p style="font-size: 24px; color: #27ae60; font-weight: bold;">$<%= product.price %></p>
+  <p><%= pluralize(product.stock_quantity, 'unit') %> available</p>
+  
+  <% if product.stock_quantity > 0 %>
+    <!-- Use GET method for now to test -->
+    <%= link_to "Add to Cart", test_add_to_cart_path(product.id), 
+        style: "display: inline-block; background-color: #3498db; color: white; padding: 8px 15px; text-decoration: none; border-radius: 5px;" %>
+  <% else %>
+    <button disabled>Out of Stock</button>
+  <% end %>
+</div>

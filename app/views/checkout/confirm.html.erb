@@ -1,0 +1,39 @@
+<h1>Order Confirmed!</h1>
+
+<div style="text-align: center; padding: 40px; background: #d4edda; border-radius: 5px; margin: 20px 0;">
+  <h2 style="color: #155724;">Thank you for your order!</h2>
+  <p style="font-size: 18px; color: #155724;">Your order has been successfully placed.</p>
+</div>
+
+<div style="border: 1px solid #ddd; padding: 20px; border-radius: 5px;">
+  <h3>Order Details</h3>
+  <p><strong>Order Number:</strong> <%= @order.order_number %></p>
+  <p><strong>Order Date:</strong> <%= @order.created_at.strftime("%B %d, %Y") %></p>
+  <p><strong>Total Amount:</strong> $<%= number_with_precision(@order.total, precision: 2) %></p>
+  <p><strong>Shipping to:</strong> <%= @customer.full_address %></p>
+  
+  <h3>Order Items</h3>
+  <table style="width: 100%; border-collapse: collapse;">
+    <thead>
+      <tr style="background: #f4f4f4;">
+        <th style="padding: 8px; text-align: left;">Product</th>
+        <th style="padding: 8px; text-align: left;">Quantity</th>
+        <th style="padding: 8px; text-align: left;">Price</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @order.order_items.each do |item| %>
+        <tr>
+          <td style="padding: 8px;"><%= item.product_name %></td>
+          <td style="padding: 8px;"><%= item.quantity %></td>
+          <td style="padding: 8px;">$<%= number_with_precision(item.unit_price, precision: 2) %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+
+<div style="text-align: center; margin-top: 30px;">
+  <%= link_to "Continue Shopping", root_path, style: "background: #007bff; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; margin-right: 10px;" %>
+  <%= link_to "View My Orders", orders_path, style: "background: #6c757d; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;" %>
+</div>

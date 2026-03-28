@@ -1,0 +1,80 @@
+<h1>Order Invoice</h1>
+
+<div style="border: 1px solid #ddd; padding: 20px; border-radius: 5px;">
+  <div style="text-align: center; margin-bottom: 30px;">
+    <h2>Winnipeg Home Essentials</h2>
+    <p>Order #: <%= @order.order_number %></p>
+    <p>Date: <%= Time.now.strftime("%B %d, %Y") %></p>
+  </div>
+
+  <div style="background: #f8f9fa; padding: 15px; margin-bottom: 20px; border-radius: 5px;">
+    <h3>Bill To:</h3>
+    <p>
+      <%= @customer.full_name %><br>
+      <%= @customer.address %><br>
+      <%= @customer.city %>, <%= @customer.province %> <%= @customer.postal_code %><br>
+      Email: <%= @customer.email %><br>
+      Phone: <%= @customer.phone || 'N/A' %>
+    </p>
+  </div>
+
+  <table style="width: 100%; border-collapse: collapse; margin: 20px 0;">
+    <thead>
+      <tr style="background: #f4f4f4;">
+        <th style="border: 1px solid #ddd; padding: 10px; text-align: left;">Product</th>
+        <th style="border: 1px solid #ddd; padding: 10px; text-align: left;">Quantity</th>
+        <th style="border: 1px solid #ddd; padding: 10px; text-align: left;">Unit Price</th>
+        <th style="border: 1px solid #ddd; padding: 10px; text-align: left;">Subtotal</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @cart_items.each do |item| %>
+        <tr>
+          <td style="border: 1px solid #ddd; padding: 10px;"><%= item['name'] %></td>
+          <td style="border: 1px solid #ddd; padding: 10px;"><%= item['quantity'] %></td>
+          <td style="border: 1px solid #ddd; padding: 10px;">$<%= number_with_precision(item['price'], precision: 2) %></td>
+          <td style="border: 1px solid #ddd; padding: 10px;">$<%= number_with_precision(item['price'] * item['quantity'], precision: 2) %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+  <div style="text-align: right; margin-top: 20px;">
+    <table style="margin-left: auto;">
+      <tr>
+        <td style="padding: 5px 10px;"><strong>Subtotal:</strong></td>
+        <td style="padding: 5px 10px;">$<%= number_with_precision(@subtotal, precision: 2) %></td>
+      </tr>
+
+      <% if @taxes[:hst] > 0 %>
+        <tr>
+          <td style="padding: 5px 10px;"><strong>HST (<%= (@taxes[:rates][:hst] * 100).to_i %>%):</strong></td>
+          <td style="padding: 5px 10px;">$<%= number_with_precision(@taxes[:hst], precision: 2) %></td>
+        </tr>
+      <% else %>
+        <% if @taxes[:gst] > 0 %>
+          <tr>
+            <td style="padding: 5px 10px;"><strong>GST (5%):</strong></td>
+            <td style="padding: 5px 10px;">$<%= number_with_precision(@taxes[:gst], precision: 2) %></td>
+          </tr>
+        <% end %>
+        <% if @taxes[:pst] > 0 %>
+          <tr>
+            <td style="padding: 5px 10px;"><strong>PST (<%= (@taxes[:rates][:pst] * 100).to_i %>%):</strong></td>
+            <td style="padding: 5px 10px;">$<%= number_with_precision(@taxes[:pst], precision: 2) %></td>
+          </tr>
+        <% end %>
+      <% end %>
+
+      <tr style="border-top: 2px solid #333; font-size: 18px;">
+        <td style="padding: 10px 10px;"><strong>TOTAL:</strong></td>
+        <td style="padding: 10px 10px;"><strong>$<%= number_with_precision(@taxes[:total], precision: 2) %></strong></td>
+      </tr>
+    </table>
+  </div>
+
+  <div style="text-align: center; margin-top: 30px;">
+    <%= link_to "Confirm Order", checkout_confirm_path, style: "background: #28a745; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; margin-right: 10px;" %>
+    <%= link_to "Edit Address", checkout_address_path, style: "background: #6c757d; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;" %>
+  </div>
+</div>
