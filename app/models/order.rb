@@ -51,3 +51,10 @@ end
   validates :subtotal, presence: true
   validates :tax, presence: true
   validates :total, presence: true
+  # Calculate tax based on province
+  def calculate_tax(subtotal, province)
+    gst = subtotal * province.gst_rate
+    pst = subtotal * province.pst_rate
+    hst = subtotal * province.hst_rate
+    (gst + pst + hst).round(2)
+  end
