@@ -92,3 +92,6 @@ puts "✅ Admin: admin@winnipegessentials.com / password123"
 puts "✅ #{Province.count} provinces seeded"
 puts "✅ #{Category.count} categories"
 puts "✅ #{Product.count} products"
+# Add more products for testing
+Product.create!(name: 'Winter Blanket', description: 'Warm cozy blanket', price: 49.99, stock_quantity: 20)
+Product.create!(name: 'Hot Chocolate Set', description: 'Premium hot chocolate mix', price: 24.99, stock_quantity: 30)
