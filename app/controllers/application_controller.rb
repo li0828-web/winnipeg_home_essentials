@@ -35,3 +35,7 @@ end
   def after_sign_out_path_for(resource)
     root_path
   end
+  def cart_count
+    session[:cart]&.values&.sum || 0
+  end
+  helper_method :cart_count
