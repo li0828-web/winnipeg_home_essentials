@@ -100,3 +100,8 @@ class CartController < ApplicationController
     redirect_to cart_path, notice: "Cart cleared!"
   end
 end
+class CartController < ApplicationController
+  def show
+    @cart = session[:cart] || {}
+  end
+end
