@@ -13,4 +13,4 @@ class Province < ApplicationRecord
       gst_rate + pst_rate
     end
   end
-end
+end# Province model contains Canadian tax rates (GST, PST, HST)
