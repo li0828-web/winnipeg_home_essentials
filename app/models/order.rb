@@ -48,3 +48,6 @@ class Order < ApplicationRecord
 endclass Order < ApplicationRecord
   belongs_to :user
 end
+  validates :subtotal, presence: true
+  validates :tax, presence: true
+  validates :total, presence: true

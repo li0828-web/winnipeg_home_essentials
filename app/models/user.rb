@@ -14,3 +14,4 @@ class User < ApplicationRecord
     address.present? && city.present? && postal_code.present? && province.present?
   end
 end
+  validates :email, presence: true, uniqueness: true

@@ -37,3 +37,5 @@ class Product < ApplicationRecord
   scope :new_products, -> { where('created_at >= ?', 3.days.ago) }
   scope :on_sale, -> { where('sale_price IS NOT NULL') }
 end
+  validates :name, presence: true
+  validates :price, presence: true, numericality: { greater_than_or_equal_to: 0 }
