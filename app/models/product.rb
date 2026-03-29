@@ -33,3 +33,7 @@ class Product < ApplicationRecord
     sale_price.present? && sale_price < price
   end
 end
+class Product < ApplicationRecord
+  scope :new_products, -> { where('created_at >= ?', 3.days.ago) }
+  scope :on_sale, -> { where('sale_price IS NOT NULL') }
+end
