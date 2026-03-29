@@ -18,3 +18,4 @@ class Page < ApplicationRecord
     find_by(slug: slug)
   end
 end
+# Page model for editable about and contact pages
