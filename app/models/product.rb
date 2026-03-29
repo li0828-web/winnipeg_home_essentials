@@ -40,3 +40,8 @@ end
   validates :name, presence: true
   validates :price, presence: true, numericality: { greater_than_or_equal_to: 0 }
   # Custom validation messages
+  # Calculate discount percentage for sale items
+  def discount_percentage
+    return 0 unless on_sale?
+    ((price - sale_price) / price * 100).round
+  end
