@@ -45,3 +45,7 @@ end
     return 0 unless on_sale?
     ((price - sale_price) / price * 100).round
   end
+  # Return sale price if on sale, otherwise regular price
+  def current_price
+    on_sale? ? sale_price : price
+  end
