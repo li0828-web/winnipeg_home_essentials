@@ -14,3 +14,4 @@ class OrderItem < ApplicationRecord
     self.subtotal = (quantity * unit_price).round(2)
   end
 end
+# OrderItem model stores individual product snapshots for historical pricing
