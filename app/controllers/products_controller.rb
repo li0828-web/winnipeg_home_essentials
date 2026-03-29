@@ -31,3 +31,6 @@ class ProductsController < ApplicationController
     @product = Product.find(params[:id])
   end
 end
+  def index
+    @products = Product.page(params[:page]).per(6)
+  end
