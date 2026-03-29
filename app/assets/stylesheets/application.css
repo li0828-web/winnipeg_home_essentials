@@ -46,3 +46,8 @@ body {
 .navbar a:hover {
   color: #3498db;
 }
+/* Responsive design for mobile devices */
+@media (max-width: 768px) {
+  .products-grid { grid-template-columns: 1fr; }
+  .product-card { margin: 10px; }
+}
