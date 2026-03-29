@@ -105,4 +105,8 @@ class CheckoutController < ApplicationController
   def customer_params
     params.require(:customer).permit(:first_name, :last_name, :email, :address, :city, :province, :postal_code, :phone)
   end
+endclass CheckoutController < ApplicationController
+  def new
+    @cart = session[:cart] || {}
+  end
 end

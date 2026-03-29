@@ -45,4 +45,6 @@ class Order < ApplicationRecord
   def tax_calculation
     @tax_calculation ||= TaxCalculator.calculate(subtotal, province.code)
   end
+endclass Order < ApplicationRecord
+  belongs_to :user
 end
