@@ -1,0 +1,558 @@
+// ============================================
+// Winnipeg Home Essentials - Main Stylesheet
+// ============================================
+
+// 1. VARIABLES
+// ============================================
+$primary-color: #2c3e50;
+$secondary-color: #3498db;
+$success-color: #27ae60;
+$danger-color: #e74c3c;
+$warning-color: #e67e22;
+$light-gray: #f8f9fa;
+$medium-gray: #95a5a6;
+$dark-gray: #7f8c8d;
+$border-color: #e0e0e0;
+
+$spacing-sm: 8px;
+$spacing-md: 15px;
+$spacing-lg: 20px;
+$spacing-xl: 30px;
+$spacing-xxl: 40px;
+
+$border-radius-sm: 5px;
+$border-radius-md: 8px;
+$border-radius-lg: 10px;
+
+$font-size-base: 16px;
+$font-size-lg: 24px;
+$font-size-xl: 32px;
+
+$transition-speed: 0.2s;
+$transition-fast: 0.1s;
+
+// 2. OPERATORS
+// ============================================
+$grid-gap: $spacing-xl;
+$product-card-width: calc(33.333% - #{$grid-gap});
+$tablet-width: 768px;
+$mobile-width: 480px;
+
+// 3. MIXINS (INHERITANCE)
+// ============================================
+@mixin card {
+  border: 1px solid $border-color;
+  border-radius: $border-radius-md;
+  background: white;
+  padding: $spacing-lg;
+  transition: transform $transition-speed, box-shadow $transition-speed;
+  
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  }
+}
+
+@mixin button($bg-color) {
+  background-color: $bg-color;
+  color: white;
+  border: none;
+  padding: $spacing-sm $spacing-lg;
+  border-radius: $border-radius-sm;
+  cursor: pointer;
+  transition: background-color $transition-fast;
+  text-decoration: none;
+  display: inline-block;
+  
+  &:hover {
+    background-color: darken($bg-color, 10%);
+  }
+  
+  &:disabled {
+    background-color: $medium-gray;
+    cursor: not-allowed;
+  }
+}
+
+@mixin flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@mixin grid-layout($columns: 3) {
+  display: grid;
+  grid-template-columns: repeat($columns, 1fr);
+  gap: $grid-gap;
+}
+
+// 4. NESTING
+// ============================================
+
+// Header styles
+.header {
+  background-color: $primary-color;
+  padding: $spacing-md;
+  color: white;
+  
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    
+    .logo {
+      margin: 0;
+      
+      a {
+        color: white;
+        text-decoration: none;
+        
+        &:hover {
+          color: $secondary-color;
+        }
+      }
+    }
+    
+    .nav-links {
+      a {
+        color: white;
+        text-decoration: none;
+        margin-right: $spacing-lg;
+        
+        &:hover {
+          color: $secondary-color;
+        }
+        
+        &.cart-link {
+          color: $success-color;
+        }
+      }
+    }
+  }
+}
+
+// Products page styles
+.products-page {
+  h1 {
+    text-align: center;
+    margin-bottom: $spacing-xxl;
+  }
+  
+  // Filter buttons
+  .filter-buttons {
+    display: flex;
+    justify-content: center;
+    gap: $spacing-md;
+    margin-bottom: $spacing-lg;
+    flex-wrap: wrap;
+    
+    .filter-btn {
+      padding: $spacing-sm $spacing-lg;
+      border-radius: $border-radius-sm;
+      text-decoration: none;
+      transition: all $transition-fast;
+      
+      &.active {
+        background-color: $primary-color;
+        color: white;
+      }
+      
+      &:not(.active) {
+        background-color: $medium-gray;
+        color: white;
+        
+        &:hover {
+          background-color: darken($medium-gray, 10%);
+        }
+      }
+      
+      // Operator usage
+      &.new {
+        background-color: $success-color;
+      }
+      
+      &.updated {
+        background-color: $secondary-color;
+      }
+      
+      &.sale {
+        background-color: $warning-color;
+      }
+    }
+  }
+  
+  // Search form
+  .search-form {
+    background: $light-gray;
+    padding: $spacing-lg;
+    border-radius: $border-radius-md;
+    margin-bottom: $spacing-xl;
+    
+    form {
+      display: flex;
+      gap: $spacing-md;
+      align-items: center;
+      flex-wrap: wrap;
+      
+      .search-input {
+        flex: 2;
+        min-width: 200px;
+        
+        input {
+          width: 100%;
+          padding: $spacing-sm;
+          border: 1px solid $border-color;
+          border-radius: $border-radius-sm;
+        }
+      }
+      
+      .category-select {
+        flex: 1;
+        min-width: 150px;
+        
+        select {
+          width: 100%;
+          padding: $spacing-sm;
+          border: 1px solid $border-color;
+          border-radius: $border-radius-sm;
+        }
+      }
+      
+      .search-actions {
+        button {
+          @include button($secondary-color);
+        }
+        
+        .clear-link {
+          margin-left: $spacing-sm;
+          padding: $spacing-sm $spacing-lg;
+          background-color: $medium-gray;
+          color: white;
+          text-decoration: none;
+          border-radius: $border-radius-sm;
+          
+          &:hover {
+            background-color: darken($medium-gray, 10%);
+          }
+        }
+      }
+    }
+  }
+  
+  // Products grid
+  .products-grid {
+    @include grid-layout(3);
+    
+    .product-card {
+      @include card;
+      position: relative;
+      
+      // Badges - nesting
+      .badges {
+        position: absolute;
+        top: $spacing-sm;
+        right: $spacing-sm;
+        display: flex;
+        gap: $spacing-sm;
+        flex-direction: column;
+        align-items: flex-end;
+        
+        .badge {
+          padding: 5px 10px;
+          border-radius: $border-radius-sm;
+          font-size: 12px;
+          font-weight: bold;
+          
+          &.new-badge {
+            background-color: $success-color;
+            color: white;
+          }
+          
+          &.updated-badge {
+            background-color: $secondary-color;
+            color: white;
+          }
+          
+          &.sale-badge {
+            background-color: $warning-color;
+            color: white;
+          }
+        }
+      }
+      
+      h3 {
+        margin: 0 0 $spacing-sm 0;
+        
+        a {
+          text-decoration: none;
+          color: $primary-color;
+          
+          &:hover {
+            color: $secondary-color;
+          }
+        }
+      }
+      
+      .product-description {
+        color: $dark-gray;
+      }
+      
+      .price {
+        margin: $spacing-md 0;
+        
+        .original-price {
+          font-size: 14px;
+          color: $medium-gray;
+          text-decoration: line-through;
+          margin: 0;
+        }
+        
+        .sale-price {
+          font-size: $font-size-xl;
+          color: $warning-color;
+          font-weight: bold;
+          margin: 5px 0;
+        }
+        
+        .regular-price {
+          font-size: $font-size-lg;
+          color: $success-color;
+          font-weight: bold;
+          margin: $spacing-md 0;
+        }
+        
+        .save-amount {
+          font-size: 12px;
+          color: $warning-color;
+          margin: 0;
+        }
+      }
+      
+      .stock {
+        color: $dark-gray;
+        font-size: 14px;
+      }
+      
+      .add-to-cart {
+        margin-top: $spacing-md;
+        
+        form {
+          display: flex;
+          gap: $spacing-sm;
+          
+          input[type="number"] {
+            width: 60px;
+            padding: $spacing-sm;
+            border: 1px solid $border-color;
+            border-radius: $border-radius-sm;
+          }
+          
+          button {
+            @include button($secondary-color);
+            flex: 1;
+            
+            &.sale-button {
+              background-color: $warning-color;
+            }
+          }
+        }
+        
+        a {
+          display: block;
+          text-align: center;
+          @include button($secondary-color);
+          
+          &.sale-button {
+            background-color: $warning-color;
+          }
+        }
+      }
+    }
+  }
+  
+  // Pagination
+  .pagination {
+    text-align: center;
+    margin-top: $spacing-xl;
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+    
+    a, span {
+      padding: $spacing-sm 12px;
+      text-decoration: none;
+      border-radius: $border-radius-sm;
+      
+      &.current {
+        background-color: $primary-color;
+        color: white;
+      }
+      
+      &:not(.current) {
+        background-color: $light-gray;
+        color: $primary-color;
+        
+        &:hover {
+          background-color: $secondary-color;
+          color: white;
+        }
+      }
+    }
+  }
+}
+
+// Cart page styles
+.cart-page {
+  h1 {
+    margin-bottom: $spacing-xl;
+  }
+  
+  .cart-table {
+    width: 100%;
+    border-collapse: collapse;
+    
+    th, td {
+      padding: $spacing-sm;
+      text-align: left;
+    }
+    
+    th {
+      background-color: $light-gray;
+      border-bottom: 2px solid $border-color;
+    }
+    
+    td {
+      border-bottom: 1px solid $border-color;
+    }
+  }
+  
+  .cart-total {
+    font-size: $font-size-lg;
+    font-weight: bold;
+    color: $success-color;
+  }
+  
+  .cart-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: $spacing-xl;
+    
+    .continue-shopping {
+      @include button($medium-gray);
+    }
+    
+    .clear-cart {
+      @include button($danger-color);
+      margin-right: $spacing-sm;
+    }
+    
+    .checkout {
+      @include button($success-color);
+    }
+  }
+}
+
+// Checkout page styles
+.checkout-page {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: $spacing-xl;
+  
+  .order-summary {
+    @include card;
+  }
+  
+  .shipping-form {
+    @include card;
+    
+    form {
+      .form-group {
+        margin-bottom: $spacing-md;
+        
+        label {
+          display: block;
+          margin-bottom: $spacing-sm;
+          font-weight: bold;
+        }
+        
+        input, select {
+          width: 100%;
+          padding: $spacing-sm;
+          border: 1px solid $border-color;
+          border-radius: $border-radius-sm;
+        }
+      }
+      
+      .place-order {
+        width: 100%;
+        @include button($success-color);
+        font-size: $font-size-base;
+        margin-top: $spacing-lg;
+      }
+    }
+  }
+}
+
+// 5. MEDIA QUERIES (RESPONSIVE)
+// ============================================
+@media (max-width: $tablet-width) {
+  .products-page .products-grid {
+    @include grid-layout(2);
+  }
+  
+  .checkout-page {
+    grid-template-columns: 1fr;
+    gap: $spacing-lg;
+  }
+}
+
+@media (max-width: $mobile-width) {
+  .products-page .products-grid {
+    @include grid-layout(1);
+  }
+  
+  .header .container {
+    flex-direction: column;
+    gap: $spacing-md;
+  }
+  
+  .filter-buttons {
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+// Page styles
+.page-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: $spacing-lg;
+  
+  .back-link {
+    color: $secondary-color;
+    text-decoration: none;
+    display: inline-block;
+    margin-bottom: $spacing-lg;
+    
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+  
+  .page-content {
+    @include card;
+    padding: $spacing-xl;
+    
+    h1 {
+      margin-top: 0;
+      color: $primary-color;
+    }
+    
+    .content {
+      line-height: 1.6;
+      color: #555;
+    }
+  }
+}

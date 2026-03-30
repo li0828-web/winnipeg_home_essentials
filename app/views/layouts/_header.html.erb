@@ -1,12 +1,12 @@
-<div style="background: #2c3e50; padding: 15px; color: white;">
-  <div style="max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center;">
-    <h2 style="margin: 0;">
-      <%= link_to "🏠 Winnipeg Home Essentials", root_path, style: "color: white; text-decoration: none;" %>
+<div class="header">
+  <div class="container">
+    <h2 class="logo">
+      <%= link_to "🏠 Winnipeg Home Essentials", root_path %>
     </h2>
-    <div>
-      <%= link_to "Products", products_path, style: "color: white; text-decoration: none; margin-right: 20px;" %>
-      <%= link_to "About", "/about", style: "color: white; text-decoration: none; margin-right: 20px;" %>
-      <%= link_to "Contact", "/contact", style: "color: white; text-decoration: none; margin-right: 20px;" %>
+    <div class="nav-links">
+      <%= link_to "Products", products_path %>
+      <%= link_to "About", about_path %>
+      <%= link_to "Contact", contact_path %>
       <% 
         cart_count = 0
         if session[:cart].present? && session[:cart].is_a?(Hash)
@@ -15,8 +15,18 @@
           end
         end
       %>
-      <%= link_to "🛒 Cart (#{cart_count})", cart_path, style: "color: white; text-decoration: none; margin-right: 20px;" %>
-      <%= link_to "Admin", "/admin", style: "color: #27ae60; text-decoration: none;" %>
+      <%= link_to "🛒 Cart (#{cart_count})", cart_path, class: "cart-link" %>
+      
+      <% if user_signed_in? %>
+        <span>👤 <%= current_user.email %></span>
+        <% if current_user.admin? %>
+          <%= link_to "Admin", admin_dashboard_path, style: "color: #27ae60; margin-left: 10px;" %>
+        <% end %>
+        <%= link_to "Logout", destroy_user_session_path, method: :delete, data: { turbo_method: :delete }, style: "color: #e74c3c; margin-left: 10px;" %>
+      <% else %>
+        <%= link_to "Login", new_user_session_path, style: "margin-left: 10px;" %>
+        <%= link_to "Sign Up", new_user_registration_path, style: "margin-left: 10px;" %>
+      <% end %>
     </div>
   </div>
 </div>

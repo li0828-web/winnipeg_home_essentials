@@ -4,39 +4,35 @@
 <div style="background: #ffffcc; padding: 15px; margin-bottom: 20px; border: 2px solid #ffcc00;">
   <h3>🔧 Debug Info</h3>
   <p><strong>Session ID:</strong> <%= session.id %></p>
-  <p><strong>Cart Contents:</strong> <%= session[:cart].inspect %></p>
-  
-  <h4>Test Links:</h4>
-  <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-    <a href="/cart/test_add/1" style="background: #27ae60; color: white; padding: 8px 15px; text-decoration: none; border-radius: 5px;">➕ Add Product #1</a>
-    <a href="/cart/clear" data-method="delete" style="background: #dc3545; color: white; padding: 8px 15px; text-decoration: none; border-radius: 5px;">🗑️ Clear Cart</a>
-    <a href="/products" style="background: #3498db; color: white; padding: 8px 15px; text-decoration: none; border-radius: 5px;">📦 Continue Shopping</a>
-  </div>
+  <p><strong>Raw Cart Contents:</strong> <%= session[:cart].inspect %></p>
+  <p><strong>Cart Count:</strong> <%= session[:cart]&.values&.sum || 0 %></p>
+  <p><strong>@cart_items:</strong> <%= @cart_items.inspect %></p>
 </div>
 
 <% if @cart_items.empty? %>
   <div style="text-align: center; padding: 50px; background: #f8f9fa; border-radius: 10px;">
     <p style="font-size: 18px;">🛒 Your cart is empty.</p>
-    <p>Click the green button above to add a product!</p>
+    <p>Debug: @cart_items is blank.</p>
+    <%= link_to "Continue Shopping", products_path, style: "display: inline-block; margin-top: 20px; padding: 10px 20px; background: #3498db; color: white; text-decoration: none; border-radius: 5px;" %>
   </div>
 <% else %>
   <h2>Cart Items:</h2>
   <table style="width: 100%; border-collapse: collapse; border: 1px solid #ddd;">
     <thead>
       <tr style="background: #f8f9fa; border-bottom: 2px solid #dee2e6;">
-        <th style="padding: 10px; text-align: left;">Product</th>
+        <th style="padding: 10px; text-align: left;">Product ID</th>
+        <th style="padding: 10px; text-align: left;">Product Name</th>
         <th style="padding: 10px; text-align: center;">Quantity</th>
         <th style="padding: 10px; text-align: right;">Price</th>
         <th style="padding: 10px; text-align: right;">Total</th>
         <th style="padding: 10px; text-align: center;">Action</th>
-       </tr>
+      </tr>
     </thead>
     <tbody>
       <% @cart_items.each do |item| %>
         <tr style="border-bottom: 1px solid #dee2e6;">
-          <td style="padding: 10px;">
-            <strong><%= item[:product].name %></strong>
-          </td>
+          <td style="padding: 10px;"><%= item[:product].id %></td>
+          <td style="padding: 10px;"><strong><%= item[:product].name %></strong></td>
           <td style="padding: 10px; text-align: center;">
             <%= form_tag update_cart_quantity_path(item[:product].id), method: :patch, style: "display: inline-block;" do %>
               <%= number_field_tag :quantity, item[:quantity], min: 1, max: item[:product].stock_quantity, style: "width: 60px;" %>
@@ -53,15 +49,23 @@
     </tbody>
     <tfoot>
       <tr style="background: #f8f9fa; border-top: 2px solid #dee2e6;">
-        <td colspan="3" style="padding: 10px; text-align: right; font-size: 18px;"><strong>Total:</strong></td>
+        <td colspan="4" style="padding: 10px; text-align: right; font-size: 18px;"><strong>Total:</strong></td>
         <td style="padding: 10px; text-align: right; font-size: 24px; color: #27ae60; font-weight: bold;">$<%= @total %></td>
         <td></td>
       </tr>
     </tfoot>
   </table>
-  
+
   <div style="margin-top: 20px; text-align: right;">
-    <a href="/checkout" style="background: #27ae60; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Proceed to Checkout</a>
+    <% if user_signed_in? %>
+      <%= link_to "Proceed to Checkout", checkout_path, style: "background: #27ae60; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;" %>
+    <% else %>
+      <p style="margin-bottom: 10px;">Please log in to complete your order:</p>
+      <%= link_to "Login to Checkout", new_user_session_path, style: "background: #3498db; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;" %>
+    <% end %>
   </div>
 <% end %>
-<h1>Shopping Cart</h1>
+
+<div style="margin-top: 20px; text-align: center;">
+  <%= link_to "Continue Shopping", products_path, style: "color: #3498db; text-decoration: none;" %>
+</div>

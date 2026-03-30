@@ -1,14 +1,36 @@
-<div style="border: 1px solid #e0e0e0; border-radius: 8px; padding: 20px; background: white; margin-bottom: 20px;">
-  <h3><%= link_to product.name, product_path(product), style: "text-decoration: none; color: #2c3e50;" %></h3>
-  <p><%= truncate(product.description, length: 100) %></p>
-  <p style="font-size: 24px; color: #27ae60; font-weight: bold;">$<%= product.price %></p>
-  <p><%= pluralize(product.stock_quantity, 'unit') %> available</p>
-  
+<div class="product-card">
+  <div class="badges">
+    <% if product.on_sale? %>
+      <div class="badge sale-badge">🔥 <%= product.discount_percentage %>% OFF</div>
+    <% end %>
+    <% if product.is_new? && !product.on_sale? %>
+      <div class="badge new-badge">🆕 NEW</div>
+    <% end %>
+    <% if product.recently_updated? && !product.is_new? && !product.on_sale? %>
+      <div class="badge updated-badge">🔄 UPDATED</div>
+    <% end %>
+  </div>
+
+  <h3><%= link_to product.name, product_path(product) %></h3>
+  <p class="product-description"><%= truncate(product.description, length: 100) %></p>
+
+  <div class="price">
+    <% if product.on_sale? %>
+      <p class="original-price">Was: $<%= product.price %></p>
+      <p class="sale-price">$<%= product.sale_price %></p>
+      <p class="save-amount">Save $<%= (product.price - product.sale_price).round(2) %>!</p>
+    <% else %>
+      <p class="regular-price">$<%= product.price %></p>
+    <% end %>
+  </div>
+
+  <p class="stock"><%= pluralize(product.stock_quantity, 'unit') %> available</p>
+
   <% if product.stock_quantity > 0 %>
-    <!-- Use GET method for now to test -->
-    <%= link_to "Add to Cart", test_add_to_cart_path(product.id), 
-        style: "display: inline-block; background-color: #3498db; color: white; padding: 8px 15px; text-decoration: none; border-radius: 5px;" %>
+    <%= link_to "Add to Cart", test_add_to_cart_path(product.id),
+        data: { turbo: false },
+        class: product.on_sale? ? "add-to-cart-btn sale-button" : "add-to-cart-btn" %>
   <% else %>
-    <button disabled>Out of Stock</button>
+    <button disabled class="add-to-cart-btn disabled">Out of Stock</button>
   <% end %>
 </div>

@@ -1,16 +1,14 @@
 class Province < ApplicationRecord
-  has_many :users
-  has_many :orders
+  has_many :users, dependent: :nullify
+  has_many :orders, dependent: :nullify
 
+  validates :name, presence: true, uniqueness: true
   validates :code, presence: true, uniqueness: true, length: { is: 2 }
-  validates :name, presence: true
-  validates :gst_rate, :pst_rate, :hst_rate, numericality: { greater_than_or_equal_to: 0 }
+  validates :gst_rate, presence: true, numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 1 }
+  validates :pst_rate, presence: true, numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 1 }
+  validates :hst_rate, presence: true, numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 1 }
 
-  def tax_rate
-    if hst_rate > 0
-      hst_rate
-    else
-      gst_rate + pst_rate
-    end
+  def total_tax_rate
+    gst_rate + pst_rate + hst_rate
   end
-end# Province model contains Canadian tax rates (GST, PST, HST)
+end

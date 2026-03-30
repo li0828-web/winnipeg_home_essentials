@@ -1,74 +1,86 @@
-<h1 style="text-align: center; margin-bottom: 40px;">Our Products</h1>
+<div class="products-page">
+  <h1>Our Products</h1>
 
-<!-- Filter Buttons -->
-<div style="display: flex; justify-content: center; gap: 15px; margin-bottom: 20px; flex-wrap: wrap;">
-  <%= link_to "All Products", products_path(filter: nil), 
-      style: "padding: 10px 20px; background: #{params[:filter].nil? ? '#2c3e50' : '#95a5a6'}; color: white; text-decoration: none; border-radius: 5px;" %>
-  
-  <%= link_to "🆕 New Products", products_path(filter: 'new'), 
-      style: "padding: 10px 20px; background: #{params[:filter] == 'new' ? '#27ae60' : '#95a5a6'}; color: white; text-decoration: none; border-radius: 5px;" %>
-  
-  <%= link_to "🔄 Recently Updated", products_path(filter: 'recently_updated'), 
-      style: "padding: 10px 20px; background: #{params[:filter] == 'recently_updated' ? '#3498db' : '#95a5a6'}; color: white; text-decoration: none; border-radius: 5px;" %>
-  
-  <%= link_to "🏷️ On Sale", products_path(filter: 'on_sale'), 
-      style: "padding: 10px 20px; background: #{params[:filter] == 'on_sale' ? '#e67e22' : '#95a5a6'}; color: white; text-decoration: none; border-radius: 5px;" %>
-</div>
+  <!-- Filter Buttons -->
+  <div class="filter-buttons">
+    <%= link_to "All Products", products_path(filter: nil), class: "filter-btn #{'active' if params[:filter].nil?}" %>
+    <%= link_to "🆕 New Products", products_path(filter: 'new'), class: "filter-btn new #{'active' if params[:filter] == 'new'}" %>
+    <%= link_to "🔄 Recently Updated", products_path(filter: 'recently_updated'), class: "filter-btn updated #{'active' if params[:filter] == 'recently_updated'}" %>
+    <%= link_to "🏷️ On Sale", products_path(filter: 'on_sale'), class: "filter-btn sale #{'active' if params[:filter] == 'on_sale'}" %>
+  </div>
 
-<!-- Search Form -->
-<div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 30px;">
-  <%= search_form_for @q, url: products_path, method: :get do |f| %>
-    <%= hidden_field_tag :filter, params[:filter] %>
-    <%= hidden_field_tag :page, params[:page] %>
-    <div style="display: flex; gap: 15px; align-items: center; flex-wrap: wrap;">
-      <div style="flex: 2; min-width: 200px;">
-        <%= f.search_field :name_or_description_cont, 
-            placeholder: "Search by product name or description...", 
-            value: params[:q]&.dig(:name_or_description_cont),
-            style: "width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;" %>
-      </div>
-      <div style="flex: 1; min-width: 150px;">
-        <%= f.select :category_id_eq, 
-            options_from_collection_for_select(Category.all, :id, :name, params[:q]&.dig(:category_id_eq)), 
-            { include_blank: "All Categories" }, 
-            style: "width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;" %>
-      </div>
+  <!-- Search Form -->
+  <div class="search-form">
+    <%= search_form_for @q, url: products_path, method: :get do |f| %>
+      <%= hidden_field_tag :filter, params[:filter] %>
+      <%= hidden_field_tag :page, params[:page] %>
       <div>
-        <%= f.submit "Search", style: "background: #3498db; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;" %>
-        <%= link_to "Clear", products_path(filter: params[:filter]), style: "margin-left: 10px; padding: 10px 20px; background: #95a5a6; color: white; text-decoration: none; border-radius: 5px;" %>
-      </div>
-    </div>
-  <% end %>
-</div>
-
-<!-- Products Grid -->
-<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 30px; padding: 20px;">
-  <% if @products.any? %>
-    <% @products.each do |product| %>
-      <div style="border: 1px solid #e0e0e0; border-radius: 8px; padding: 20px; background: white;">
-        <h3><%= link_to product.name, product_path(product), style: "text-decoration: none; color: #2c3e50;" %></h3>
-        <p><%= truncate(product.description, length: 100) %></p>
-        <p style="font-size: 24px; color: #27ae60; font-weight: bold;">$<%= product.price %></p>
-        <p><%= pluralize(product.stock_quantity, 'unit') %> available</p>
-        
-        <% if product.stock_quantity > 0 %>
-          <%= link_to "Add to Cart", test_add_to_cart_path(product.id), 
-              style: "display: inline-block; background-color: #3498db; color: white; padding: 8px 15px; text-decoration: none; border-radius: 5px;" %>
-        <% else %>
-          <button disabled style="background: #95a5a6; color: white; padding: 8px 15px; border: none; border-radius: 5px;">Out of Stock</button>
-        <% end %>
+        <div class="search-input">
+          <%= f.search_field :name_or_description_cont, 
+              placeholder: "Search by product name or description...", 
+              value: params[:q]&.dig(:name_or_description_cont) %>
+        </div>
+        <div class="category-select">
+          <%= f.select :category_id_eq, 
+              options_from_collection_for_select(Category.all, :id, :name, params[:q]&.dig(:category_id_eq)), 
+              { include_blank: "All Categories" } %>
+        </div>
+        <div class="search-actions">
+          <%= f.submit "Search" %>
+          <%= link_to "Clear", products_path(filter: params[:filter]), class: "clear-link" %>
+        </div>
       </div>
     <% end %>
-  <% else %>
-    <p style="text-align: center; grid-column: 1/-1; color: #666;">No products found.</p>
-  <% end %>
-</div>
+  </div>
 
-<!-- Pagination -->
-<div style="text-align: center; margin-top: 30px;">
-  <%= paginate @products %>
-</div>
-<!-- Pagination -->
-<div style="text-align: center; margin-top: 30px;">
-  <%= paginate @products %>
+  <!-- Products Grid -->
+  <div class="products-grid">
+    <% if @products.any? %>
+      <% @products.each do |product| %>
+        <div class="product-card">
+          <div class="badges">
+            <% if product.on_sale? %>
+              <div class="badge sale-badge">🔥 <%= product.discount_percentage %>% OFF</div>
+            <% end %>
+            <% if product.is_new? && !product.on_sale? %>
+              <div class="badge new-badge">🆕 NEW</div>
+            <% end %>
+            <% if product.recently_updated? && !product.is_new? && !product.on_sale? %>
+              <div class="badge updated-badge">🔄 UPDATED</div>
+            <% end %>
+          </div>
+          
+          <h3><%= link_to product.name, product_path(product) %></h3>
+          <p class="product-description"><%= truncate(product.description, length: 100) %></p>
+          
+          <div class="price">
+            <% if product.on_sale? %>
+              <p class="original-price">Was: $<%= product.price %></p>
+              <p class="sale-price">$<%= product.sale_price %></p>
+              <p class="save-amount">Save $<%= (product.price - product.sale_price).round(2) %>!</p>
+            <% else %>
+              <p class="regular-price">$<%= product.price %></p>
+            <% end %>
+          </div>
+          
+          <p class="stock"><%= pluralize(product.stock_quantity, 'unit') %> available</p>
+          
+          <div class="add-to-cart">
+            <% if product.stock_quantity > 0 %>
+              <%= link_to "Add to Cart", test_add_to_cart_path(product.id), class: product.on_sale? ? "sale-button" : "" %>
+            <% else %>
+              <button disabled>Out of Stock</button>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    <% else %>
+      <p class="no-products">No products found.</p>
+    <% end %>
+  </div>
+
+  <!-- Pagination -->
+  <div class="pagination">
+    <%= paginate @products %>
+  </div>
 </div>
