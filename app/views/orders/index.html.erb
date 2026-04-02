@@ -1,0 +1,37 @@
+<h1>My Orders</h1>
+
+<% if @orders.empty? %>
+  <div style="text-align: center; padding: 50px; background: #f8f9fa; border-radius: 10px;">
+    <p>You haven't placed any orders yet.</p>
+    <%= link_to "Start Shopping", products_path, style: "display: inline-block; margin-top: 20px; padding: 10px 20px; background: #3498db; color: white; text-decoration: none; border-radius: 5px;" %>
+  </div>
+<% else %>
+  <table style="width: 100%; border-collapse: collapse;">
+    <thead>
+      <tr style="background: #f8f9fa; border-bottom: 2px solid #dee2e6;">
+        <th style="padding: 12px; text-align: left;">Order #</th>
+        <th style="padding: 12px; text-align: left;">Date</th>
+        <th style="padding: 12px; text-align: right;">Total</th>
+        <th style="padding: 12px; text-align: center;">Status</th>
+        <th style="padding: 12px; text-align: center;">Actions</th>
+       </tr>
+    </thead>
+    <tbody>
+      <% @orders.each do |order| %>
+        <tr style="border-bottom: 1px solid #dee2e6;">
+          <td style="padding: 12px;"><%= order.id %></td>
+          <td style="padding: 12px;"><%= order.created_at.strftime("%B %d, %Y") %></td>
+          <td style="padding: 12px; text-align: right;">$<%= order.total %></td>
+          <td style="padding: 12px; text-align: center;">
+            <span style="background: <%= order.status == 'paid' ? '#27ae60' : '#f39c12' %>; color: white; padding: 4px 8px; border-radius: 4px;">
+              <%= order.status.capitalize %>
+            </span>
+          </td>
+          <td style="padding: 12px; text-align: center;">
+            <%= link_to "View Details", order_path(order), style: "color: #3498db;" %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% end %>

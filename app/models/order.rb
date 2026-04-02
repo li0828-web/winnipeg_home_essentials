@@ -10,6 +10,15 @@ class Order < ApplicationRecord
   validates :tax, presence: true, numericality: { greater_than_or_equal_to: 0 }
   validates :total, presence: true, numericality: { greater_than_or_equal_to: 0 }
 
+  # Required for ActiveAdmin search/filters
+  def self.ransackable_attributes(auth_object = nil)
+    ["created_at", "id", "order_number", "status", "subtotal", "tax", "total", "updated_at", "user_id", "province_id"]
+  end
+
+  def self.ransackable_associations(auth_object = nil)
+    ["order_items", "province", "user"]
+  end
+
   def calculate_taxes(subtotal, province)
     gst = subtotal * province.gst_rate
     pst = subtotal * province.pst_rate
@@ -17,4 +26,3 @@ class Order < ApplicationRecord
     gst + pst + hst
   end
 end
-

@@ -33,46 +33,11 @@
     <% end %>
   </div>
 
-  <!-- Products Grid -->
+  <!-- Products Grid - USING THE PARTIAL -->
   <div class="products-grid">
     <% if @products.any? %>
       <% @products.each do |product| %>
-        <div class="product-card">
-          <div class="badges">
-            <% if product.on_sale? %>
-              <div class="badge sale-badge">🔥 <%= product.discount_percentage %>% OFF</div>
-            <% end %>
-            <% if product.is_new? && !product.on_sale? %>
-              <div class="badge new-badge">🆕 NEW</div>
-            <% end %>
-            <% if product.recently_updated? && !product.is_new? && !product.on_sale? %>
-              <div class="badge updated-badge">🔄 UPDATED</div>
-            <% end %>
-          </div>
-          
-          <h3><%= link_to product.name, product_path(product) %></h3>
-          <p class="product-description"><%= truncate(product.description, length: 100) %></p>
-          
-          <div class="price">
-            <% if product.on_sale? %>
-              <p class="original-price">Was: $<%= product.price %></p>
-              <p class="sale-price">$<%= product.sale_price %></p>
-              <p class="save-amount">Save $<%= (product.price - product.sale_price).round(2) %>!</p>
-            <% else %>
-              <p class="regular-price">$<%= product.price %></p>
-            <% end %>
-          </div>
-          
-          <p class="stock"><%= pluralize(product.stock_quantity, 'unit') %> available</p>
-          
-          <div class="add-to-cart">
-            <% if product.stock_quantity > 0 %>
-              <%= link_to "Add to Cart", test_add_to_cart_path(product.id), class: product.on_sale? ? "sale-button" : "" %>
-            <% else %>
-              <button disabled>Out of Stock</button>
-            <% end %>
-          </div>
-        </div>
+        <%= render 'product_card', product: product %>
       <% end %>
     <% else %>
       <p class="no-products">No products found.</p>

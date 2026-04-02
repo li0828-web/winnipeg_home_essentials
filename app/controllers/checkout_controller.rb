@@ -87,7 +87,7 @@ class CheckoutController < ApplicationController
     # Clear cart
     # session[:cart] = {}
 
-    redirect_to order_path(order), notice: "Order placed successfully!"
+    redirect_to order_confirmation_path(order), notice: "Order placed successfully!"
   end
 
   def show

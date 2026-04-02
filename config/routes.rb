@@ -1,9 +1,9 @@
 Rails.application.routes.draw do
-  # Devise routes for users
-  devise_for :users
-  
   # ActiveAdmin routes
   ActiveAdmin.routes(self)
+  
+  # Devise routes for users
+  devise_for :users
   
   # Page routes
   get '/about', to: 'pages#show', defaults: { slug: 'about' }
@@ -20,7 +20,12 @@ Rails.application.routes.draw do
   # Checkout routes
   get 'checkout', to: 'checkout#new'
   post 'checkout', to: 'checkout#create'
-  get 'orders/:id', to: 'checkout#show', as: 'order'
+  
+  # Order routes for users (must come BEFORE the singular order route)
+  resources :orders, only: [:index, :show]
+  
+  # Checkout order confirmation (uses a different path to avoid conflict)
+  get 'order_confirmation/:id', to: 'checkout#show', as: 'order_confirmation'
   
   # Public product routes
   resources :products, only: [:index, :show]

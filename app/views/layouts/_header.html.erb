@@ -19,6 +19,7 @@
       
       <% if user_signed_in? %>
         <span>👤 <%= current_user.email %></span>
+        <%= link_to "My Orders", orders_path, style: "margin-left: 10px;" %>
         <% if current_user.admin? %>
           <%= link_to "Admin", admin_dashboard_path, style: "color: #27ae60; margin-left: 10px;" %>
         <% end %>
