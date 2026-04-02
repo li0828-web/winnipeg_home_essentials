@@ -1,5 +1,7 @@
 class Product < ApplicationRecord
   belongs_to :category, optional: true
+  has_many :order_items, dependent: :destroy
+  has_many :orders, through: :order_items
 
   validates :name, presence: true, length: { minimum: 3, maximum: 100 }
   validates :description, presence: true, length: { minimum: 10, maximum: 1000 }
@@ -18,7 +20,7 @@ class Product < ApplicationRecord
   end
 
   def self.ransackable_associations(auth_object = nil)
-    ["category"]
+    ["category", "order_items", "orders"]
   end
 
   def is_new?

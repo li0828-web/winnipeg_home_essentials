@@ -2,6 +2,7 @@ class Order < ApplicationRecord
   belongs_to :user
   belongs_to :province
   has_many :order_items, dependent: :destroy
+  has_many :products, through: :order_items
 
   enum status: { pending: 0, paid: 1, shipped: 2, cancelled: 3 }
 
@@ -16,7 +17,7 @@ class Order < ApplicationRecord
   end
 
   def self.ransackable_associations(auth_object = nil)
-    ["order_items", "province", "user"]
+    ["order_items", "products", "province", "user"]
   end
 
   def calculate_taxes(subtotal, province)
