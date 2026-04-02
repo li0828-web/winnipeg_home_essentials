@@ -1,10 +1,7 @@
 class ApplicationController < ActionController::Base
-  # Skip authentication for ActiveAdmin pages
   before_action :authenticate_user!, unless: :devise_controller?
-  
-  # Helper methods
-  helper_method :cart_count
-  
+  before_action :configure_permitted_parameters, if: :devise_controller?
+
   def after_sign_in_path_for(resource)
     if resource.admin?
       admin_dashboard_path
@@ -12,18 +9,18 @@ class ApplicationController < ActionController::Base
       root_path
     end
   end
-  
+
   def after_sign_out_path_for(resource)
     root_path
   end
-  
-  def cart_count
-    session[:cart]&.values&.sum || 0
-  end
-  
+
   protected
-  
+
   def configure_permitted_parameters
+    # Add debug to see what's being permitted
+    Rails.logger.info "=== PERMITTED PARAMETERS ==="
+    Rails.logger.info params.inspect
+    
     devise_parameter_sanitizer.permit(:sign_up, keys: [:address, :city, :postal_code, :province_id])
     devise_parameter_sanitizer.permit(:account_update, keys: [:address, :city, :postal_code, :province_id])
   end

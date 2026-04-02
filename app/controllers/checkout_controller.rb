@@ -1,9 +1,11 @@
 class CheckoutController < ApplicationController
   before_action :authenticate_user!
-  before_action :require_cart_items
 
   def new
     @cart = session[:cart] || {}
+    if @cart.empty?
+      redirect_to cart_path, alert: "Your cart is empty" and return
+    end
     @cart_items = []
     @subtotal = 0
 
@@ -28,8 +30,7 @@ class CheckoutController < ApplicationController
 
   def create
     @cart = session[:cart] || {}
-
-    if @cart.empty?
+    if session[:cart].blank? || session[:cart].empty?
       redirect_to cart_path, alert: "Your cart is empty" and return
     end
 
@@ -84,22 +85,21 @@ class CheckoutController < ApplicationController
     end
 
     # Clear cart
-    session[:cart] = {}
+    # session[:cart] = {}
 
     redirect_to order_path(order), notice: "Order placed successfully!"
   end
 
   def show
+    @cart = session[:cart] || {}
+    if session[:cart].blank? || session[:cart].empty?
+      redirect_to cart_path, alert: "Your cart is empty but was required" and return
+    end
     @order = current_user.orders.find(params[:id])
   end
 
   private
 
-  def require_cart_items
-    if session[:cart].blank? || session[:cart].empty?
-      redirect_to cart_path, alert: "Your cart is empty" and return
-    end
-  end
 
   def calculate_tax(subtotal, province)
     gst = subtotal * province.gst_rate
