@@ -4,6 +4,8 @@ class Order < ApplicationRecord
   has_many :order_items, dependent: :destroy
   has_many :products, through: :order_items
 
+  accepts_nested_attributes_for :order_items, allow_destroy: true
+
   enum status: { pending: 0, paid: 1, shipped: 2, cancelled: 3 }
 
   validates :status, presence: true, inclusion: { in: statuses.keys }
@@ -11,7 +13,6 @@ class Order < ApplicationRecord
   validates :tax, presence: true, numericality: { greater_than_or_equal_to: 0 }
   validates :total, presence: true, numericality: { greater_than_or_equal_to: 0 }
 
-  # Required for ActiveAdmin search/filters
   def self.ransackable_attributes(auth_object = nil)
     ["created_at", "id", "order_number", "status", "subtotal", "tax", "total", "updated_at", "user_id", "province_id"]
   end

@@ -21,11 +21,14 @@ Rails.application.routes.draw do
   get 'checkout', to: 'checkout#new'
   post 'checkout', to: 'checkout#create'
   
-  # Order routes for users (must come BEFORE the singular order route)
+  # Order confirmation route
+  get 'order_confirmation/:id', to: 'checkout#show', as: 'order_confirmation'
+  
+  # Order routes for users
   resources :orders, only: [:index, :show]
   
-  # Checkout order confirmation (uses a different path to avoid conflict)
-  get 'order_confirmation/:id', to: 'checkout#show', as: 'order_confirmation'
+  # Category routes
+  resources :categories, only: [:show]
   
   # Public product routes
   resources :products, only: [:index, :show]

@@ -17,10 +17,6 @@ class ApplicationController < ActionController::Base
   protected
 
   def configure_permitted_parameters
-    # Add debug to see what's being permitted
-    Rails.logger.info "=== PERMITTED PARAMETERS ==="
-    Rails.logger.info params.inspect
-    
     devise_parameter_sanitizer.permit(:sign_up, keys: [:address, :city, :postal_code, :province_id])
     devise_parameter_sanitizer.permit(:account_update, keys: [:address, :city, :postal_code, :province_id])
   end

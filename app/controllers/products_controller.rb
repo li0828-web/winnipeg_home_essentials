@@ -3,7 +3,7 @@ class ProductsController < ApplicationController
 
   def index
     products = Product.all
-
+    
     case params[:filter]
     when 'new'
       products = products.new_products
@@ -17,7 +17,7 @@ class ProductsController < ApplicationController
     else
       @active_filter = 'All Products'
     end
-
+    
     if params[:q].present?
       @q = products.ransack(params[:q])
       @products = @q.result(distinct: true).order(created_at: :desc).page(params[:page]).per(6)
@@ -31,6 +31,3 @@ class ProductsController < ApplicationController
     @product = Product.find(params[:id])
   end
 end
-  def index
-    @products = Product.page(params[:page]).per(6)
-  end

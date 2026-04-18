@@ -556,3 +556,35 @@ $mobile-width: 480px;
     }
   }
 }
+
+/* Breadcrumbs - Location Based Navigation */
+.breadcrumbs {
+  padding: 12px 0;
+  margin-bottom: 20px;
+  font-size: 13px;
+  color: #7f8c8d;
+  border-bottom: 1px solid #ecf0f1;
+  font-family: Arial, sans-serif;
+}
+
+.breadcrumbs a {
+  color: #3498db;
+  text-decoration: none;
+}
+
+.breadcrumbs a:hover {
+  text-decoration: underline;
+  color: #2980b9;
+}
+
+.breadcrumbs .current {
+  color: #2c3e50;
+  font-weight: 500;
+}
+
+/* For screen readers - shows location */
+.breadcrumbs::before {
+  content: "You are here: ";
+  font-weight: normal;
+  color: #95a5a6;
+}
